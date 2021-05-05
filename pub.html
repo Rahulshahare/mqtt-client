@@ -9,9 +9,9 @@
 var mqtt;
 var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
 
-
-client.publish('Oceangreen', 'green')
-
+for(i=0; i<=10; i++){
+client.publish('Oceangreen', 'This is message '+i)
+}
 client.on('message', function (topic, message) {
   console.log(message)
 })
