@@ -10,7 +10,7 @@ var mqtt;
 var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
 
 
-client.publish('presence', 'green')
+client.publish('Oceangreen', 'green')
 
 client.on('message', function (topic, message) {
   console.log(message)
