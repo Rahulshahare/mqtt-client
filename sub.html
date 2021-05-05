@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Poho mqtt js</title>
+</head>
+<script src="https://unpkg.com/mqtt@4.2.6/dist/mqtt.min.js" type="text/javascript"></script>
+
+
+<script type="text/javascript" language="javascript">
+var mqtt;
+var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
+
+client.subscribe('presence')
+
+client.on('message', function (topic, message) {
+  console.log(message)
+})
+//client.end()
+ 
+</script>
+<body>
+</body>
+</html>
