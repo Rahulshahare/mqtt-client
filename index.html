@@ -7,9 +7,9 @@
 
 <script type="text/javascript" language="javascript">
 var mqtt;
-var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
+var client = mqtt.connect('wss://test.mosquitto.org:8081/mqtt');
 
-client.subscribe('presence')
+client.subscribe('Oceangreen')
 client.publish('presence', 'green')
 client.on('message', function (topic, message) {
   console.log(message)
