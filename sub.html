@@ -9,7 +9,9 @@
 var mqtt;
 var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
 
-client.subscribe('Oceangreen')
+client.subscribe('Oceangreen');
+
+client.subscribe('Oceangreen4');
 
 client.on('message', function (topic, message) {
   console.log(message)
