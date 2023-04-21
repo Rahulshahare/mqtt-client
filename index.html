@@ -1,66 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MQTT Example</title>
-  <script src="https://unpkg.com/mqtt@4.2.6/dist/mqtt.min.js"></script> <!-- MQTT.js library -->
+    <title>MQTT WebSocket Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
 </head>
 <body>
-  <h1>MQTT Example</h1>
-  <button onclick="connect()">Connect</button>
-  <button onclick="disconnect()">Disconnect</button>
-  <input type="text" id="messageInput" placeholder="Enter message">
-  <button onclick="publish()">Send</button>
-  <div id="messages"></div>
+    <h1>MQTT WebSocket Example</h1>
+    <input type="text" id="messageInput" placeholder="Enter message...">
+    <button onclick="sendMessage()">Send</button>
+    <ul id="messageList"></ul>
+    <script>
+        // MQTT broker URL
+        var brokerUrl = 'wss://test.mosquitto.org:8081';
 
-  <script>
-    // MQTT client instance
-    let client;
+        // MQTT client
+        var client = new Paho.MQTT.Client(brokerUrl, 'mqttClient');
 
-    // Function to connect to MQTT broker
-    function connect() {
-      // Create a MQTT client instance
-      //For local protocol
-     // client = mqtt.connect('ws://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
-      //For HTTPS protocol
-      client = mqtt.connect('wss://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
+        // Set callback handlers
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
 
-      // Set up an event listener for when the client is connected
-      client.on('connect', () => {
-        console.log('Connected to MQTT broker');
-        client.subscribe('myTopic'); // Replace with your desired topic
-      });
+        // Connect to MQTT broker
+        client.connect({onSuccess: onConnect});
 
-      // Set up an event listener for when a message is received
-      client.on('message', (topic, message) => {
-        console.log(`Received message on topic: ${topic}`);
-        console.log(`Message: ${message.toString()}`);
-        document.getElementById('messages').innerHTML += `<p><strong>Topic:</strong> ${topic}</p><p><strong>Message:</strong> ${message.toString()}</p>`;
-      });
+        // Connection successful callback
+        function onConnect() {
+            console.log('Connected to MQTT broker:', brokerUrl);
+            // Subscribe to a topic
+            client.subscribe('test/topic');
+        }
 
-      // Set up an event listener for any errors
-      client.on('error', (err) => {
-        console.error(`Error: ${err}`);
-      });
-    }
+        // Connection lost callback
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log('Connection lost:', responseObject.errorMessage);
+            }
+        }
 
-    // Function to disconnect from MQTT broker
-    function disconnect() {
-      if (client) {
-        client.end();
-        console.log('Disconnected from MQTT broker');
-      }
-    }
+        // Message received callback
+        function onMessageArrived(message) {
+            // Display received message
+            var listItem = document.createElement('li');
+            listItem.textContent = message.destinationName + ': ' + message.payloadString;
+            document.getElementById('messageList').appendChild(listItem);
+        }
 
-    // Function to publish a message to a topic
-    function publish() {
-      if (client) {
-        const message = document.getElementById('messageInput').value; // Get message from input box
-        const topic = 'myTopic'; // Replace with your desired topic
-        client.publish(topic, message);
-        console.log(`Published message to topic: ${topic}`);
-        document.getElementById('messageInput').value = ''; // Clear input box
-      }
-    }
-  </script>
+        // Send message
+        function sendMessage() {
+            var message = new Paho.MQTT.Message(document.getElementById('messageInput').value);
+            message.destinationName = 'test/topic';
+            client.send(message);
+            document.getElementById('messageInput').value = '';
+        }
+    </script>
 </body>
 </html>
