@@ -1,24 +1,63 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>MQTT</title>
+  <title>MQTT Example</title>
+  <script src="https://unpkg.com/mqtt@4.2.6/dist/mqtt.min.js"></script> <!-- MQTT.js library -->
 </head>
-<script src="https://unpkg.com/mqtt@4.2.6/dist/mqtt.min.js" type="text/javascript"></script>
-
-
-<script type="text/javascript" language="javascript">
-var mqtt;
-//var connection = new WebSocket('wss://test.mosquitto.org:8081/mqtt', 'echo-protocol');
-var client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
-var client = mqtt.connect(connection);
-
-client.subscribe('Oceangreen')
-client.publish('presence', 'green')
-client.on('message', function (topic, message) {
-  console.log(message)
-})
-//client.end()
- 
-</script>
 <body>
+  <h1>MQTT Example</h1>
+  <button onclick="connect()">Connect</button>
+  <button onclick="disconnect()">Disconnect</button>
+  <input type="text" id="messageInput" placeholder="Enter message">
+  <button onclick="publish()">Send</button>
+  <div id="messages"></div>
+
+  <script>
+    // MQTT client instance
+    let client;
+
+    // Function to connect to MQTT broker
+    function connect() {
+      // Create a MQTT client instance
+      client = mqtt.connect('ws://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
+
+      // Set up an event listener for when the client is connected
+      client.on('connect', () => {
+        console.log('Connected to MQTT broker');
+        client.subscribe('myTopic'); // Replace with your desired topic
+      });
+
+      // Set up an event listener for when a message is received
+      client.on('message', (topic, message) => {
+        console.log(`Received message on topic: ${topic}`);
+        console.log(`Message: ${message.toString()}`);
+        document.getElementById('messages').innerHTML += `<p><strong>Topic:</strong> ${topic}</p><p><strong>Message:</strong> ${message.toString()}</p>`;
+      });
+
+      // Set up an event listener for any errors
+      client.on('error', (err) => {
+        console.error(`Error: ${err}`);
+      });
+    }
+
+    // Function to disconnect from MQTT broker
+    function disconnect() {
+      if (client) {
+        client.end();
+        console.log('Disconnected from MQTT broker');
+      }
+    }
+
+    // Function to publish a message to a topic
+    function publish() {
+      if (client) {
+        const message = document.getElementById('messageInput').value; // Get message from input box
+        const topic = 'myTopic'; // Replace with your desired topic
+        client.publish(topic, message);
+        console.log(`Published message to topic: ${topic}`);
+        document.getElementById('messageInput').value = ''; // Clear input box
+      }
+    }
+  </script>
 </body>
 </html>
