@@ -19,7 +19,10 @@
     // Function to connect to MQTT broker
     function connect() {
       // Create a MQTT client instance
-      client = mqtt.connect('ws://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
+      //For local protocol
+     // client = mqtt.connect('ws://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
+      //For HTTPS protocol
+      client = mqtt.connect('wss://test.mosquitto.org:8080'); // Replace with your MQTT broker URL
 
       // Set up an event listener for when the client is connected
       client.on('connect', () => {
