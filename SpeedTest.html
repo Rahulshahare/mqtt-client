@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        #progress {
+            margin-top: 10px;
+        }
+        #progressBar {
+            width: 100%;
+            background-color: #f3f3f3;
+            height: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #progressBar div {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Internet Speed Test</h1>
+    <button onclick="startTest()">Start Test</button>
+
+    <div id="progress">
+        <div id="progressBar"><div></div></div>
+    </div>
+    
+    <div id="results">
+        <p id="duration"></p>
+        <p id="speed"></p>
+    </div>
+
+    <script>
+        function startTest() {
+            const progressBar = document.getElementById('progressBar').firstElementChild;
+            const durationDisplay = document.getElementById('duration');
+            const speedDisplay = document.getElementById('speed');
+            const imageUrl = "https://rahulshahare.github.io/mqtt-client/Ocean.gif"; // Replace with a suitable test image URL
+
+            const startTime = new Date().getTime(); // Get the start time
+            const image = new Image();
+            image.onload = () => {
+                const endTime = new Date().getTime(); // Get the end time
+                const duration = (endTime - startTime) / 1000; // Duration in seconds
+                const fileSizeInBytes = 1228428; // Replace with the actual file size in bytes (this is an example value)
+                const fileSizeInBits = fileSizeInBytes * 8;
+                const speedBps = fileSizeInBits / duration; // Speed in bits per second
+                const speedKbps = speedBps / 1024; // Speed in Kbps
+                const speedMbps = speedKbps / 1024; // Speed in Mbps
+
+                durationDisplay.textContent = `Duration: ${duration.toFixed(2)} seconds`;
+                speedDisplay.textContent = `Speed: ${speedMbps.toFixed(2)} Mbps`;
+                progressBar.style.width = '100%';
+            };
+
+            image.onerror = () => {
+                speedDisplay.textContent = 'Error loading image. Please try again.';
+                progressBar.style.width = '0%';
+            };
+
+            image.src = imageUrl + "?cacheBuster=" + new Date().getTime(); // Prevent caching
+            progressBar.style.width = '0%';
+        }
+    </script>
+</body>
+</html>

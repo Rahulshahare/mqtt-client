@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Size Calculator</title>
+</head>
+<body>
+    <input type="file" id="fileInput" />
+    <p id="fileSizeDisplay"></p>
+
+    <script>
+        function calculateFileSize() {
+            const fileInput = document.getElementById('fileInput');
+            const fileSizeDisplay = document.getElementById('fileSizeDisplay');
+            const file = fileInput.files[0]; // Get the first file selected
+
+            if (file) {
+                const fileSizeInBytes = file.size;
+                const fileSizeInKB = fileSizeInBytes / 1024;
+                const fileSizeInMB = fileSizeInKB / 1024;
+
+                fileSizeDisplay.textContent = `File size: 
+                ${fileSizeInBytes.toFixed(2)} bytes, 
+                ${fileSizeInKB.toFixed(2)} KB, 
+                ${fileSizeInMB.toFixed(2)} MB`;
+            } else {
+                fileSizeDisplay.textContent = 'No file selected.';
+            }
+        }
+
+        document.getElementById('fileInput').addEventListener('change', calculateFileSize);
+    </script>
+</body>
+</html>
