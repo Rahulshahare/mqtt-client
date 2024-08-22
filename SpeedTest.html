@@ -54,6 +54,8 @@
             const image = new Image();
 
             if(!navigator.onLine){
+                progressBar.style.width = '0%';
+                durationDisplay.textContent = ``;                
                 speedDisplay.textContent = 'No internet🌐.';
                 return false
             }
